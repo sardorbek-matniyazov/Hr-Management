@@ -12,4 +12,4 @@ Spring security asosida crud amallari va rollar orqali methodlarni boshlarishni 
 
 # Qo'shimcha 
 
-Testlar bo'limida service sinflarini sinash maqsadida oddiy testlar yaratilgan shular orqali ham nima hodisalar ro'y berayotganini ko'rishimiz mumkun bu yerida Mock yani sohta malumotlar bilan ishlanadi. lekin teslarni tekshirishdan o;din qanaqa tartibda test qilinishini ko'rib o'lishingiz kerak !
+Testlar bo'limida service sinflarini sinash maqsadida oddiy testlar yaratilgan shular orqali ham nima hodisalar ro'y berayotganini ko'rishimiz mumkun bu yerida Mock yani sohta malumotlar bilan ishlanadi. lekin testlarni tekshirishdan oldin qanaqa tartibda test qilinishini ko'rib o'lishingiz kerak !
