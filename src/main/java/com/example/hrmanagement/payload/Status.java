@@ -8,6 +8,7 @@ public record Status(String message, boolean success, Object any) {
         this(message, success, null);
     }
 
+    public static final Status ALREADY_FINISHED = new Status("The work has already finished", false);
     public static final Status COMPANY_EXIST = new Status("Company already created", false);
     public static final Status COMPANY_NOT_FOUND = new Status("Company not found", false);
     public static final Status NON_USED_USER = new Status("this isn't your own", false);

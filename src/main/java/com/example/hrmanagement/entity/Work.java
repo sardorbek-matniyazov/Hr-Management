@@ -45,6 +45,8 @@ public class Work {
     @LastModifiedDate
     private Timestamp updatedAt;
 
+    private Timestamp finishedDate;
+
     @Enumerated(EnumType.STRING)
     private StatusName statusName;
 

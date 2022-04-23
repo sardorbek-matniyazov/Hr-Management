@@ -112,6 +112,33 @@ public class User implements UserDetails {
         this.token = generateToken;
     }
 
+    public User(
+            String firstName,
+            String lastName,
+            String username,
+            Company company,
+            String password,
+            String email,
+            Set<Role> roles,
+            boolean accountNonExpired,
+            boolean accountNonLocked,
+            boolean credentialsNonExpired,
+            boolean enabled,
+            String generateToken) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.username = username;
+        this.company = company;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.enabled = enabled;
+        this.token = generateToken;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles;

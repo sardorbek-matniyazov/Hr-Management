@@ -1,6 +1,7 @@
 package com.example.hrmanagement.payload;
 
 import com.example.hrmanagement.entity.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.Email;
@@ -9,6 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
+@AllArgsConstructor
 public class ManagerDto {
 
     @Size(min = 4, max = 50, message = "length must be 3 < x < 50")

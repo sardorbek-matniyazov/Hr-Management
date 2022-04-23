@@ -16,7 +16,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -82,7 +84,10 @@ public record WorkService (WorkRepository repository,
         if(!repository.existsById(id))
             return Status.WORK_NOT_FOUND;
         Work work = repository.getById(id);
+        if (work.getStatusName().equals(StatusName.DONE))
+            return Status.ALREADY_FINISHED;
         work.setStatusName(StatusName.DONE);
+        work.setFinishedDate(Timestamp.valueOf(LocalDateTime.now()));
         repository.save(work);
         return Status.SUCCESS;
     }
@@ -101,5 +106,9 @@ public record WorkService (WorkRepository repository,
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<Work> list = repository.findAllByStatusNameAndWorkerId(StatusName.NEW, user.getId());
         return new Status("your current new works", true, list);
+    }
+
+    public List<Work> getFinished() {
+        return repository.findFinishedWorks();
     }
 }

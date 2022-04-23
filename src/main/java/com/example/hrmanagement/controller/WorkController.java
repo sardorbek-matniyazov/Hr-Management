@@ -48,5 +48,11 @@ public record WorkController (WorkService service) {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @GetMapping(value = "/allFinished")
+    public HttpEntity<?> getFinished(){
+        return ResponseEntity.ok(service.getFinished());
+    }
+
+
 
 }
