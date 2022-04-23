@@ -1,6 +1,5 @@
 package com.example.hrmanagement.controller;
 
-import com.example.hrmanagement.entity.Company;
 import com.example.hrmanagement.payload.Status;
 import com.example.hrmanagement.payload.TourniquetDto;
 import com.example.hrmanagement.service.TourniquetService;

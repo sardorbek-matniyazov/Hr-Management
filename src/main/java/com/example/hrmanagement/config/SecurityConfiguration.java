@@ -46,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/api/auth/createManager", "/api/company/create").hasAuthority(RoleName.DIRECTOR.name())
-                .antMatchers("/api/auth/createWorker").hasAnyAuthority(
+                .antMatchers("/api/auth/createWorker", "/api/worker/all").hasAnyAuthority(
                         RoleName.HR_MANAGER.name(), RoleName.DIRECTOR.name()
                 )
                 .antMatchers("/api/auth/verifyEmail").permitAll()

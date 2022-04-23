@@ -25,7 +25,7 @@ public record TourniquetService (TourniquetRepository repository,
         if (dto.isOpenIn()){
             tourniquet.setOpenIn(Timestamp.valueOf(LocalDateTime.now()));
         }else{
-            tourniquet.setExitIn(Timestamp.valueOf(LocalDateTime.now()));
+            tourniquet.setExit(Timestamp.valueOf(LocalDateTime.now()));
         }
         repository.save(tourniquet);
         return Status.SUCCESS;

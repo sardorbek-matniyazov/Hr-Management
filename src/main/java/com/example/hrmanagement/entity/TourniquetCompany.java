@@ -34,7 +34,7 @@ public class TourniquetCompany {
 
     private Timestamp openIn;
 
-    private Timestamp exitIn;
+    private Timestamp exit;
 
     @CreatedDate
     @CreationTimestamp
