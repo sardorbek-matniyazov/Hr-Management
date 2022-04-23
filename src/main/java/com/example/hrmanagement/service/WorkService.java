@@ -1,10 +1,12 @@
 package com.example.hrmanagement.service;
 
+import com.example.hrmanagement.entity.TourniquetCompany;
 import com.example.hrmanagement.entity.User;
 import com.example.hrmanagement.entity.Work;
 import com.example.hrmanagement.entity.enums.StatusName;
 import com.example.hrmanagement.payload.Status;
 import com.example.hrmanagement.payload.WorkDto;
+import com.example.hrmanagement.repository.TourniquetRepository;
 import com.example.hrmanagement.repository.UserRepository;
 import com.example.hrmanagement.repository.WorkRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,8 @@ import java.util.UUID;
 @Slf4j
 public record WorkService (WorkRepository repository,
                            UserRepository userRepository,
-                           MailSender mailSender) {
+                           MailSender mailSender,
+                           TourniquetRepository tourniquetRepository) {
     public Status create(WorkDto dto) {
         if (!userRepository.existsById(dto.getWorkerId()))
             return Status.USER_NOT_FOUND;
@@ -45,7 +48,6 @@ public record WorkService (WorkRepository repository,
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(email);
-            message.setSubject("Please verify your email");
             message.setText(messageText);
             message.setFrom("Anonymous");
             mailSender.send(message);
@@ -69,6 +71,7 @@ public record WorkService (WorkRepository repository,
             return Status.NON_USED_USER;
         work.setStatusName(StatusName.CURRENT);
         repository.save(work);
+        setTourniquet(user, work);
         String message = "now you see the workers job sir http://localhost:8080/api/work/done?id="
                 +id + " enjoy )";
         sendMessage(message, userRepository.getById(work.getCreatedBy()).getEmail());
@@ -82,6 +85,16 @@ public record WorkService (WorkRepository repository,
         work.setStatusName(StatusName.DONE);
         repository.save(work);
         return Status.SUCCESS;
+    }
+
+    private void setTourniquet(User user, Work work){
+        tourniquetRepository.save(
+                new TourniquetCompany(
+                        user.getCompany(),
+                        user,
+                        work
+                )
+        );
     }
 
     public Status getAll() {

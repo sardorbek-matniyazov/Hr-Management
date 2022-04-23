@@ -5,15 +5,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -35,14 +32,9 @@ public class TourniquetCompany {
     @ManyToOne
     private Work work;
 
-
     private Timestamp openIn;
 
-
-
-
-
-
+    private Timestamp exitIn;
 
     @CreatedDate
     @CreationTimestamp
@@ -53,9 +45,20 @@ public class TourniquetCompany {
     @UpdateTimestamp
     private Timestamp updatedDate;
 
-    @CreatedBy
-    private UUID createdBy;
+    public TourniquetCompany(Company company, User user, Timestamp valueOf) {
+        this.company = company;
+        this.user = user;
+        this.openIn = valueOf;
+    }
 
-    @LastModifiedBy
-    private UUID updatedBy;
+    public TourniquetCompany(Company company, User user, Work work) {
+        this.company = company;
+        this.user = user;
+        this.work = work;
+    }
+
+    public TourniquetCompany(Company company, User user) {
+        this.company = company;
+        this.user = user;
+    }
 }

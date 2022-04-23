@@ -1,11 +1,13 @@
 package com.example.hrmanagement.service;
 
 import com.example.hrmanagement.entity.Role;
+import com.example.hrmanagement.entity.TourniquetCompany;
 import com.example.hrmanagement.entity.User;
 import com.example.hrmanagement.entity.enums.RoleName;
 import com.example.hrmanagement.payload.*;
 import com.example.hrmanagement.repository.CompanyRepository;
 import com.example.hrmanagement.repository.RoleRepository;
+import com.example.hrmanagement.repository.TourniquetRepository;
 import com.example.hrmanagement.repository.UserRepository;
 import com.example.hrmanagement.security.JwtProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +21,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.validation.Valid;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
@@ -31,7 +36,8 @@ public record AuthService(UserRepository userRepository,
                           RoleRepository roleRepository,
                           JavaMailSender mailSender,
                           JwtProvider provider,
-                          CompanyRepository companyRepository) {
+                          CompanyRepository companyRepository,
+                          TourniquetRepository tourniquetRepository) {
 
     private static final Logger logger = Logger.getLogger(AuthService.class.getName());
 
@@ -63,6 +69,16 @@ public record AuthService(UserRepository userRepository,
         return Status.SUCCESS_REGISTER;
     }
 
+    private void setTourniquet(User user){
+        tourniquetRepository.save(
+                new TourniquetCompany(
+                        user.getCompany(),
+                        user,
+                        Timestamp.valueOf(LocalDateTime.now())
+                )
+        );
+    }
+
     private void sendMessage(String messageText, String email) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -88,6 +104,7 @@ public record AuthService(UserRepository userRepository,
             user.setEnabled(true);
             user.setToken(provider.generateToken(user.getUsername(), (Set<Role>) user.getAuthorities()));
             userRepository.save(user);
+            setTourniquet(user);
             return new Status("Successfully verified", true, user.getToken());
         }
         return Status.FAILED_VERIFICATION;
@@ -131,6 +148,7 @@ public record AuthService(UserRepository userRepository,
                 null,
                 user.getAuthorities()
         );
+        setTourniquet(user);
         return new Status("Successfully login", true, user.getToken());
     }
 
@@ -142,6 +160,7 @@ public record AuthService(UserRepository userRepository,
         user.setPassword(dto.getPassword());
         user.setEnabled(true);
         userRepository.save(user);
+        setTourniquet(user);
         return new Status("Successfully login", true, user.getToken());
     }
 }
