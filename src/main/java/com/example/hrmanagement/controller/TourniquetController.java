@@ -17,6 +17,7 @@ import static com.example.hrmanagement.controller.AuthController.handleValidatio
 @RestController
 @RequestMapping(value = "/api/tourniquet")
 public record TourniquetController(TourniquetService service) {
+
     @PostMapping(value = "/create")
     public HttpEntity<?> create(@Valid @RequestBody TourniquetDto dto){
         Status create = service.create(dto);

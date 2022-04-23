@@ -8,6 +8,8 @@ public record Status(String message, boolean success, Object any) {
         this(message, success, null);
     }
 
+    public static final Status NOT_FOUND = new Status("The item not found", false);
+    public static final Status DONT_DELETE_WITH_RELATIONSHIPS = new Status("dont delete cause of relationships", false);
     public static final Status ALREADY_FINISHED = new Status("The work has already finished", false);
     public static final Status COMPANY_EXIST = new Status("Company already created", false);
     public static final Status COMPANY_NOT_FOUND = new Status("Company not found", false);

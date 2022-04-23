@@ -24,6 +24,20 @@ public record CompanyController(CompanyService service) {
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body(create);
     }
 
+    @PutMapping(value = "/update/{id}")
+    public HttpEntity<?> update(@PathVariable Long id, @Valid @RequestBody Company dto){
+        Status update = service.update(id, dto);
+        return update.success() ? ResponseEntity.ok(update) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(update);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public HttpEntity<?> delete(@PathVariable Long id){
+        Status delete = service.delete(id);
+        return delete.success() ? ResponseEntity.ok(delete) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(delete);
+    }
+
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public Map<String, String> exceptionHandler(MethodArgumentNotValidException e){

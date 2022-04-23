@@ -47,7 +47,7 @@ public class HrManagementApplication {
                             true,
                             true,
                             true,
-                            jwtProvider.generateToken("sardorbekmatniyazov03@gmail.com", null)
+                            jwtProvider.generateToken("director", null)
                     )
             );
             System.out.println("directors token is " + save.getToken());

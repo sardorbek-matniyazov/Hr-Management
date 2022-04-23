@@ -56,7 +56,7 @@ public record AuthService(UserRepository userRepository,
         if (dto.getRole().equals("MANAGER")) {
             user.setRoles(Collections.singleton(roleRepository.getByRole(RoleName.MANAGER)));
         }else if (dto.getRole().equals("HR_MANAGER")) {
-            user.setRoles(Collections.singleton(roleRepository.getByRole(RoleName.MANAGER)));
+            user.setRoles(Collections.singleton(roleRepository.getByRole(RoleName.HR_MANAGER)));
         }else
             return Status.INVALID_ROLE;
         user.setVerificationCode(UUID.randomUUID().toString());

@@ -6,10 +6,14 @@ import com.example.hrmanagement.service.WorkService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Map;
 import java.util.UUID;
+
+import static com.example.hrmanagement.controller.AuthController.handleValidationExceptions;
 
 @RestController
 @RequestMapping(value = "/api/work")
@@ -53,6 +57,29 @@ public record WorkController (WorkService service) {
         return ResponseEntity.ok(service.getFinished());
     }
 
+    @GetMapping(value = "/allNonFinished")
+    public HttpEntity<?> getNonFinished(){
+        return ResponseEntity.ok(service.getNonFinished());
+    }
 
+    @PutMapping(value = "/update/{id}")
+    public HttpEntity<?> update(@PathVariable UUID id, @Valid @RequestBody WorkDto dto){
+        Status update = service.update(id, dto);
+        return update.success() ? ResponseEntity.ok(update) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(update);
+    }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public HttpEntity<?> delete(@PathVariable UUID id){
+        Status delete = service.delete(id);
+        return delete.success() ? ResponseEntity.ok(delete) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(delete);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> exceptionHandler(MethodArgumentNotValidException e){
+        return handleValidationExceptions(e);
+    }
 
 }

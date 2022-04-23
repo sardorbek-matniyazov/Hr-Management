@@ -17,7 +17,8 @@ import java.util.UUID;
 
 import static com.example.hrmanagement.controller.AuthController.handleValidationExceptions;
 
-@RestController(value = "/api/salary")
+@RestController
+@RequestMapping(value = "/api/salary")
 public record SalaryController(SalaryService service) {
     @PostMapping(value = "/create")
     public HttpEntity<?> create(@Valid @RequestBody SalaryDto dto){
@@ -41,4 +42,12 @@ public record SalaryController(SalaryService service) {
     public HttpEntity<List<Salary>> getByDate(@PathVariable String date){
         return ResponseEntity.ok(service.getAllByDate(date));
     }
+
+    @DeleteMapping(value = "/delete/{id}")
+    public HttpEntity<?> delete(@PathVariable(value = "id") Long id){
+        Status delete = service.delete(id);
+        return delete.success() ? ResponseEntity.ok(delete) :
+                ResponseEntity.status(HttpStatus.BAD_REQUEST).body(delete);
+    }
+
 }

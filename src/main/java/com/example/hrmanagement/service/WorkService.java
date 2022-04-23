@@ -20,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,6 +29,7 @@ public record WorkService (WorkRepository repository,
                            UserRepository userRepository,
                            MailSender mailSender,
                            TourniquetRepository tourniquetRepository) {
+
     public Status create(WorkDto dto) {
         if (!userRepository.existsById(dto.getWorkerId()))
             return Status.USER_NOT_FOUND;
@@ -41,7 +43,7 @@ public record WorkService (WorkRepository repository,
                         StatusName.NEW
                 )
         );
-        String message = "sizga vzifa biriktrildi http://localhost:8080/api/work/" +
+        String message = "sizga vazifa biriktrildi http://localhost:8080/api/work/" +
                 save.getId();
         sendMessage(message, user.getEmail());
         return Status.SUCCESS;
@@ -110,5 +112,43 @@ public record WorkService (WorkRepository repository,
 
     public List<Work> getFinished() {
         return repository.findFinishedWorks();
+    }
+
+    public Object getNonFinished() {
+        return repository.findNonFinishedWorks();
+    }
+
+    public Status delete(UUID id) {
+        if (!repository.existsById(id))
+            return Status.NOT_FOUND;
+        try {
+            repository.deleteById(id);
+            return Status.SUCCESS;
+        }catch (Exception e){
+            return Status.DONT_DELETE_WITH_RELATIONSHIPS;
+        }
+    }
+
+    public Status update(UUID id, WorkDto dto) {
+        Optional<Work> byId = repository.findById(id);
+        if (byId.isPresent()){
+            if (!userRepository.existsById(dto.getWorkerId()))
+                return Status.USER_NOT_FOUND;
+            User user = userRepository.getById(dto.getWorkerId());
+            Work save = repository.save(
+                    new Work(
+                            id,
+                            dto.getName(),
+                            dto.getDescription(),
+                            Date.valueOf(LocalDate.now().plusDays(dto.getExpireDay())),
+                            user,
+                            StatusName.CURRENT
+                    )
+            );
+            String message = "vazifangiz o'zgartirildi http://localhost:8080/api/work/" +
+                    save.getId();
+            sendMessage(message, user.getEmail());
+        }
+        return Status.NOT_FOUND;
     }
 }

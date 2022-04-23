@@ -18,7 +18,7 @@ public interface WorkRepository extends JpaRepository<Work, UUID> {
     List<Work> findFinishedWorks();
 
     @Query(
-            value = "SELECT * FROM work WHERE expired_date < finished_date",
+            value = "SELECT * FROM work WHERE expired_date < finished_date OR finished_date = null",
             nativeQuery = true
     )
     List<Work> findNonFinishedWorks();

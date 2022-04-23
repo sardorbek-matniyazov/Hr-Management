@@ -2,9 +2,11 @@ package com.example.hrmanagement;
 
 import com.example.hrmanagement.entity.Salary;
 import com.example.hrmanagement.entity.TourniquetCompany;
+import com.example.hrmanagement.entity.User;
 import com.example.hrmanagement.entity.Work;
 import com.example.hrmanagement.repository.SalaryRepository;
 import com.example.hrmanagement.repository.TourniquetRepository;
+import com.example.hrmanagement.repository.UserRepository;
 import com.example.hrmanagement.repository.WorkRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -29,6 +31,9 @@ class HrManagementApplicationTests {
 
    @Autowired
    SalaryRepository salaryRepository;
+
+   @Autowired
+   UserRepository userRepository;
 
     @Test
     void contextLoads() {
@@ -62,15 +67,29 @@ class HrManagementApplicationTests {
         loggingList(allByDate);
     }
 
+    @Test
+    void checkSalariesByUserId(){
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> loggingList(salaryRepository.findAllByUserId(user.getId())));
+    }
+
+    @Test
+    void checkWorkersInTourniquet(){
+        List<TourniquetCompany> list = tourniquetRepository.findAllByUser_IdAndOpenInLessThanEqualAndExitGreaterThanEqual(
+                userRepository.getByUsername("username6").getId(),
+                Timestamp.valueOf(LocalDateTime.now().minusDays(100)),
+                Timestamp.valueOf(LocalDateTime.now().plusDays(100))
+        );
+        loggingList(list);
+    }
+
     private void loggingList(List<?> list){
         String ANSI_GREEN = "\u001B[32m";
         String ANSI_RESET = "\u001B[0m";
 
         System.out.println(ANSI_GREEN + "start");
         AtomicInteger i = new AtomicInteger(1);
-        list.forEach(e -> {
-            System.out.print(i.getAndIncrement() + ". " + e + "\n");
-        });
+        list.forEach(e -> System.out.print(i.getAndIncrement() + ". " + e + "\n"));
         System.out.println("end" + ANSI_RESET);
     }
 }

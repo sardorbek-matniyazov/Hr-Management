@@ -40,6 +40,7 @@ public class Work {
     private UUID createdBy;
 
     @CreatedDate
+    @Column(updatable = false)
     private Timestamp createdAt;
 
     @LastModifiedDate
@@ -55,6 +56,15 @@ public class Work {
                 Date expireDate,
                 User byId,
                 StatusName aNew) {
+        this.name = name;
+        this.description = description;
+        this.expiredDate = expireDate;
+        this.worker = byId;
+        this.statusName = aNew;
+    }
+
+    public Work(UUID id, String name, String description, Date expireDate, User byId, StatusName aNew) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.expiredDate = expireDate;

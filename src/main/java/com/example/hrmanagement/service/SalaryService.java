@@ -34,4 +34,15 @@ public record SalaryService(SalaryRepository repository,
     public List<Salary> getAllByDate(String date) {
         return repository.findAllByDate(date);
     }
+
+    public Status delete(Long id) {
+        if (!repository.existsById(id))
+            return Status.NOT_FOUND;
+        try {
+            repository.deleteById(id);
+            return Status.SUCCESS;
+        }catch (Exception e){
+            return Status.DONT_DELETE_WITH_RELATIONSHIPS;
+        }
+    }
 }

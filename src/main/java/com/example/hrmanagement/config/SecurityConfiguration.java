@@ -45,15 +45,45 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/createManager", "/api/company/create").hasAuthority(RoleName.DIRECTOR.name())
-                .antMatchers("/api/auth/createWorker", "/api/worker/all").hasAnyAuthority(
+                .antMatchers(
+                        "/api/auth/createManager",
+                        "/api/company/create",
+                        "/api/company/update/{id}",
+                        "/api/company/delete/{id}",
+                        "/api/worker/update/{id}"
+                ).hasAuthority(RoleName.DIRECTOR.name())
+                .antMatchers(
+                        "/api/worker/all",
+                        "/api/auth/createWorker",
+                        "/api/work/allFinished",
+                        "/api/work/allNonFinished",
+                        "/api/work/done",
+                        "/api/salary/getByUser/{userId}",
+                        "/api/salary/getByDate/{date}",
+                        "/api/salary/delete/{id}",
+                        "/api/worker/delete/{id}",
+                        "/api/work/delete/{id}"
+                ).hasAnyAuthority(
                         RoleName.HR_MANAGER.name(), RoleName.DIRECTOR.name()
                 )
-                .antMatchers("/api/auth/verifyEmail").permitAll()
+                .antMatchers(
+                        "/api/salary/create",
+                        "/api/work/create",
+                        "/api/tourniquet/create",
+                        "/api/work/update/{id}"
+                ).hasAnyAuthority(
+                        RoleName.DIRECTOR.name(), RoleName.MANAGER.name(), RoleName.HR_MANAGER.name()
+                )
+                .antMatchers(
+                        "/api/auth/verifyEmail",
+                        "/api/auth/login"
+                ).permitAll()
                 .antMatchers("/api/auth/setPassword").hasAuthority(
                         RoleName.WORKER.name()
                 )
-                .antMatchers("/api/auth/login").permitAll()
+                .antMatchers("/api/work/all").hasAnyAuthority(
+                        RoleName.WORKER.name(), RoleName.MANAGER.name()
+                )
                 .anyRequest().authenticated();
         http.addFilterBefore(myFilter, UsernamePasswordAuthenticationFilter.class);
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -66,7 +96,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    PasswordEncoder passwordEncoder(){
+    PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
@@ -75,8 +105,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(587);
-        mailSender.setUsername("batistabandit@gmail.com");
-        mailSender.setPassword("tvqgznilxpgxrkks");
+        mailSender.setUsername("YOUR USERNAME(EMAIL)");
+        mailSender.setPassword("YOUR SECRET CODE");
         Properties properties = mailSender.getJavaMailProperties();
         properties.put("mail.transport.protocol", "smtp");
         properties.put("mail.smtp.auth", "true");
