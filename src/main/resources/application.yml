@@ -1,0 +1,17 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/pdp
+    password: sardor
+    initialization-mode: NEVER
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        diealect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        enable_lazy_load_no_trans: true
